@@ -13,7 +13,7 @@ go get
 The project is still in progress. for testing the current implemenations you could run 
 
 ```bash
-cd [whatever package you're interested in]
+cd `[whatever package you're interested in]`
 go test
 ```
 
