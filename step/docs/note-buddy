@@ -1,0 +1,48 @@
+algorithm for the lexer :
+0- for each line you read until it's EOF
+	1- get the line
+	2- store the line in a buffer
+	3- you check if the buffer is empty
+		3.1 you continue
+	4- if the buffer contains '='
+		4.1- check if len(symbolData)>0
+			4.1.1 yes :-1 you split symbolText and retrive the data
+			------------2 you transform the data to fit in the symbolTable.
+			--------------you save in a Symbol with an ID and a Describtion 
+			------------3 you save the symbol in an entry of the symbolTable 
+			------------4 you reinit the symbolText to the new buffer 
+	5- else : you add the buffer to the symbolData
+	
+	
+/*BUG REPORT:
+--you need some sanitizing after lexing, this sanitizing needs to be done for each type
+--instead you can fix the getArguments command
+--fix done*/
+
+-architecture of the parser:
+---- the parser is devided into two type of functions.
+------------------------------------------------------------------------------------
+----1.functions that are used in the inference module to make the state machine work.
+----2.functions that can be seen as terminals and return data.
+----ISSUE: 
+----how to pass the data between the different nodes of the state machine.
+|----idea 1:SYNC package:
+|------1.you add a field to the symbol table to chek if it have been parsed or not (parsed bool)
+|------2.you create an initializer that pairs the type of the function with the adequate parsing
+|--------method
+|------3.you iterate over the queue of definitions.
+|----------3.1 you run the inference machine
+|--------------3.1.1 everytime you visit a node you remove it from the queue of definitions
+|----how to create a set of jobs going from this:
+|----ex: bSplineSurfaceWithKnots: 1.you get all the non-nested data.
+|---------------------------------2.THE BIG PROBLEM IS HOW YOU MAKE THE INFERENCE MODEL GET DATA TO THE PARENT.
+|-----------------------------------solution1 :you create a shared memory between them.
+|-----------------------------------algo:
+|----------------------------------------if the inference model finds the data in the shared memory it retrives it.
+|----------------------------------------else you run the inference model and get it from the shared memory.
+|------4.regarding the casting:the util get functions will get a type field to cast the definitions from string to the
+|------needed type.
+|-----------------------------------solution2 : you create getter functions that go dive in the inference model just to
+|-----------------------------------get the data. these functions will be part of the state machine but they will just 
+|-----------------------------------get the data you need.
+|-----------------------------------ex : you need vertex_point #122213 that is 
